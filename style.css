@@ -11,3 +11,12 @@ body,html{
     width: 100%;
     height: 100%;
 }
+
+#fps{
+    position:absolute;
+    top:6px;
+    left:6px;
+    z-index: 10;
+    color: white;
+    opacity: .8;
+}

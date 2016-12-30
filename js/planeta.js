@@ -1,7 +1,8 @@
 var Planeta = function(nome,op){
     this.nome = nome;
     this.posOrbita = Math.random() * 5 ;
-    this.orbita = ((Math.floor(Math.random() * 8000000) + 4000000) /20000) * 2;  //EM KM //TODO : IMPLEMENTAR AFELIO e PERIELIO
+    this.orbita = Math.floor(Math.random() * parametros.tamMaxOrbita) + parametros.tamMinOrbita;  //AFELIO
+    this.perielio = Math.random() * (0.95 - 0.25) + 0.25;  //PERIELIO
     this.diametro = (Math.floor(Math.random() * 160000) + 9000) / 10000;  //EM KM
     this.velocidade = Math.random() + 1;
     
@@ -12,9 +13,7 @@ var Planeta = function(nome,op){
         
         opcoes.nuvens = (Math.random() > 0.5);
         opcoes.rings = false;
-        
-        opcoes.resolucao = 1024;
-        
+                
         opcoes.gerador = Math.random();
         opcoes.geradorNuvens = Math.random();
         opcoes.velRotacao = 0.04;
@@ -35,4 +34,23 @@ var Planeta = function(nome,op){
     
     this.opcoes = this.geraPlaneta();
     this.globo = null;
+    
+    this.renderiza = function(){
+        var planeta = BABYLON.Mesh.CreateSphere(this.nome, 32, planetas[i].diametro, scene);
+        planeta.parent = sol;
+
+        planeta.material = geraBioma(this.opcoes);    
+        this.globo = planeta;
+
+        planeta.isBlocker = true;
+        planeta.checkCollisions = true;
+        planeta.info = planetas[i];
+
+        //CRIA ORBITA if(mostraOrbita)
+        var orbita = BABYLON.Mesh.CreateTorus("torus", this.orbita * 2, 0.3, 110, scene, false);
+        orbita.scaling = new BABYLON.Vector3(1, 1, this.perielio);
+        orbita.position.y = 10 - (planeta.getBoundingInfo().boundingBox.extendSize.y * 1.2);
+        orbita.material = materialOrbita;
+        orbita.isBlocker = false;
+    };
 };

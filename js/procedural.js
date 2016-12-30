@@ -1,7 +1,6 @@
 var geraBioma = function (opcoes) {
-    //'earth', "volcanic", "jungle", "icy", "desert", "islands", "moon"
-    var noiseTexture;
-    var cloudTexture;
+    var texturaMundo;
+    var texturaNuvens;
     
     var random = new BABYLON.DynamicTexture("random", 512, scene, false, BABYLON.Texture.NEAREST_SAMPLINGMODE);
     var random2 = new BABYLON.DynamicTexture("random", 512, scene, false, BABYLON.Texture.NEAREST_SAMPLINGMODE);
@@ -10,8 +9,8 @@ var geraBioma = function (opcoes) {
     atualizaTextura(random2);
     
     var shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
-        vertex: "./planet",
-        fragment: "./planet",
+        vertex: "./shaders/planet",
+        fragment: "./shaders/planet",
     },
         {
             attributes: ["position", "normal", "uv"],
@@ -19,31 +18,31 @@ var geraBioma = function (opcoes) {
             needAlphaBlending: true
         });
     shaderMaterial.setVector3("cameraPosition", camera.position);
-    shaderMaterial.setVector3("lightPosition", sun.position);
+    shaderMaterial.setVector3("lightPosition", sol.position);
 
-    noiseTexture = new BABYLON.ProceduralTexture("noise", 1024, "./shaders/noise", scene, null, true, true);
-    noiseTexture.setColor3("upperColor", opcoes.upperColor);
-    noiseTexture.setColor3("lowerColor", opcoes.lowerColor);
-    noiseTexture.setFloat("mapSize", 1024);
-    noiseTexture.setFloat("maxResolution", 128);
-    noiseTexture.setFloat("seed", opcoes.gerador);
-    noiseTexture.setVector2("lowerClamp", opcoes.lowerClamp);
-    noiseTexture.setTexture("randomSampler", random);
-    noiseTexture.setVector2("range", opcoes.distancia);
-    noiseTexture.setVector3("options", new BABYLON.Vector3(opcoes.directNoise ? 1.0 : 0, opcoes.lowerClip.x, opcoes.lowerClip.y));
-    noiseTexture.refreshRate = 0;
+    texturaMundo = new BABYLON.ProceduralTexture("noise", parametros.qualidadeTexturas, "./shaders/noise", scene, null, true, true);
+    texturaMundo.setColor3("upperColor", opcoes.upperColor);
+    texturaMundo.setColor3("lowerColor", opcoes.lowerColor);
+    texturaMundo.setFloat("mapSize", parametros.qualidadeTexturas);
+    texturaMundo.setFloat("maxResolution", 128);
+    texturaMundo.setFloat("seed", opcoes.gerador);
+    texturaMundo.setVector2("lowerClamp", opcoes.lowerClamp);
+    texturaMundo.setTexture("randomSampler", random);
+    texturaMundo.setVector2("range", opcoes.distancia);
+    texturaMundo.setVector3("options", new BABYLON.Vector3(opcoes.directNoise ? 1.0 : 0, opcoes.lowerClip.x, opcoes.lowerClip.y));
+    texturaMundo.refreshRate = 0;
 
-    shaderMaterial.setTexture("textureSampler", noiseTexture);
+    shaderMaterial.setTexture("textureSampler", texturaMundo);
 
-    cloudTexture = new BABYLON.ProceduralTexture("cloud", 512, "./shaders/noise", scene, null, true, true);
-    cloudTexture.setTexture("randomSampler", random2);
-    cloudTexture.setFloat("mapSize", 512);
-    cloudTexture.setFloat("maxResolution", 256);
-    cloudTexture.setFloat("seed", opcoes.geradorNuvens);
-    cloudTexture.setVector3("options", new BABYLON.Vector3(1.0, 0, 1.0));
-    cloudTexture.refreshRate = 0;
+    texturaNuvens = new BABYLON.ProceduralTexture("cloud", 512, "./shaders/noise", scene, null, true, true);
+    texturaNuvens.setTexture("randomSampler", random2);
+    texturaNuvens.setFloat("mapSize", 512);
+    texturaNuvens.setFloat("maxResolution", 256);
+    texturaNuvens.setFloat("seed", opcoes.geradorNuvens);
+    texturaNuvens.setVector3("options", new BABYLON.Vector3(1.0, 0, 1.0));
+    texturaNuvens.refreshRate = 0;
 
-    shaderMaterial.setTexture("cloudSampler", cloudTexture);
+    shaderMaterial.setTexture("cloudSampler", texturaNuvens);
 
     shaderMaterial.setColor3("haloColor", opcoes.haloColor);
 
@@ -65,16 +64,16 @@ var atualizaTextura = function (random) {
 }
 
 function skybox(){
-    var skybox = BABYLON.Mesh.CreateBox("skyBox", 10000.0, scene);
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 20000, scene);
     var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
     skyboxMaterial.backFaceCulling = false;
     var files = [
-        "texturas/espaco/space_left.jpg",
-        "texturas/espaco/space_up.jpg",
-        "texturas/espaco/space_front.jpg",
-        "texturas/espaco/space_right.jpg",
-        "texturas/espaco/space_down.jpg",
-        "texturas/espaco/space_back.jpg",
+        "texturas/espaco/1l.jpg",
+        "texturas/espaco/2l.jpg",
+        "texturas/espaco/3l.jpg",
+        "texturas/espaco/4l.jpg",
+        "texturas/espaco/5l.jpg",
+        "texturas/espaco/6l.jpg",
     ];
     skyboxMaterial.reflectionTexture = BABYLON.CubeTexture.CreateFromImages(files, scene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
