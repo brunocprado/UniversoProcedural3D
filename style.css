@@ -24,8 +24,22 @@ body,html{
 #info{
     position: absolute;
     background: rgba(0,0,0,.5);
-    padding: 10px;
+    padding: 20px;
     right: 10px;
     top: 10px;
     border-radius: 10px;
+    color: white;
+    line-height: 25px;
+    width: 240px;
+    display: none;
+}
+#info label{
+    float:left;
+}
+#info span{
+    float: right;
+}
+#info .op{
+    display:block;
+    height: 25px;
 }

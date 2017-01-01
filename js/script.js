@@ -42,7 +42,7 @@ luzSolar.decay = 0.96815;
 luzSolar.weight = 0.98767;
 luzSolar.density = 1;
 
-planetas.push(new Planeta("a",{
+planetas.push(new Planeta("Terra",{
     nuvens: true,
     upperColor: new BABYLON.Color3(2.0, 1.0, 0),
     lowerColor: new BABYLON.Color3(0, 0.2, 1.0),
@@ -57,10 +57,10 @@ planetas.push(new Planeta("a",{
     directNoise: false,
     lowerClip: new BABYLON.Vector2(0, 0),
     distancia: new BABYLON.Vector2(0.3, 0.35)
-}));
+},sol));
 
 for(var i=0;i<4;i++){
-    planetas.push(new Planeta("novo",null));
+    planetas.push(new Planeta("novo",null,sol));
 }
 
 console.log(planetas);
@@ -87,20 +87,6 @@ scene.registerBeforeRender(function () {
     }
 });
 
-    
-var click = function(evt){
-    if (evt.button !== 0) { 
-        scene.debugLayer.show(); evt.preventDefault();  return; 
-    } //engine.switchFullscreen(true);
-    var pick = scene.pick(scene.pointerX, scene.pointerY, function (mesh){ return mesh; });
-//    if(pick.pickedMesh.info != null){
-//        console.log(pick.pickedMesh.info);
-//         console.log(pick.pickedMesh.position);
-////        alert("clicou no planeta");
-//    }
-}
-canvas.addEventListener("pointerdown", click, false);
-
 BABYLON.Engine.ShadersRepository = "shaders/";
 
 function carregaTexturas(){
@@ -108,6 +94,8 @@ function carregaTexturas(){
     texturas["sol"].diffuseTexture = new BABYLON.Texture("texturas/sol.jpg", scene);
 //    texturas["sol"].reflectionTexture = new BABYLON.Texture("texturas/terra.png", scene);
 }
+
+var musicaFundo = new BABYLON.Sound("musicaFundo", "som/stay.mp3", scene, null, { loop: true, autoplay: true });
 
 skybox();
 
@@ -121,3 +109,26 @@ window.addEventListener('resize', function(){
     engine.resize();
 });
 
+var ponteiroLockado = false;
+var click = function(evt){
+    if (!ponteiroLockado) {
+        canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
+        if (canvas.requestPointerLock) {
+            canvas.requestPointerLock();
+        }
+    }
+    
+    if (evt.button !== 0) { 
+        //scene.debugLayer.show(); evt.preventDefault();  return; 
+    } 
+    var pick = scene.pick(scene.pointerX, scene.pointerY, function (mesh){ return mesh; });
+    if(pick.pickedMesh.info != null){
+        console.log(pick.pickedMesh.info);
+        info.style.display = "block";
+        infoNome.innerHTML = pick.pickedMesh.info.nome;
+        infoTipo.innerHTML = pick.pickedMesh.info.tipo;
+        infoDiametro.innerHTML = pick.pickedMesh.info.diametro * parametros.proporcao + " KM";
+        infoOrbita.innerHTML = pick.pickedMesh.info.orbita * parametros.proporcao + " KM";
+    }
+}
+canvas.addEventListener("pointerdown", click, false);
