@@ -2,12 +2,14 @@ var Planeta = function(nome,op){
     this.nome = nome;
     this.posOrbita = Math.random() * 5 ;
     this.orbita = Math.floor(Math.random() * parametros.tamMaxOrbita) + parametros.tamMinOrbita;  //AFELIO
-    this.perielio = Math.random() * (0.95 - 0.25) + 0.25;  //PERIELIO
+    this.perielio = Math.random() * (0.95 - 0.75) + 0.75;  //PERIELIO
     this.diametro = (Math.floor(Math.random() * 160000) + 9000) / 10000;  //EM KM
     this.velocidade = Math.random() + 1;
     
     this.geraPlaneta = function(){
         if(op != null) return op;
+        
+        //TODO : GERAR BIOMA BASEADO NA PROXIMIDADE DA ESTRELA
         
         var opcoes = new Object();
         
@@ -44,13 +46,17 @@ var Planeta = function(nome,op){
 
         planeta.isBlocker = true;
         planeta.checkCollisions = true;
-        planeta.info = planetas[i];
+        planeta.info = this;
 
         //CRIA ORBITA if(mostraOrbita)
         var orbita = BABYLON.Mesh.CreateTorus("torus", this.orbita * 2, 0.3, 110, scene, false);
+        orbita.parent = sol;
         orbita.scaling = new BABYLON.Vector3(1, 1, this.perielio);
         orbita.position.y = 10 - (planeta.getBoundingInfo().boundingBox.extendSize.y * 1.2);
         orbita.material = materialOrbita;
         orbita.isBlocker = false;
+        
+        planeta.simplify([{ quality: 0.8, distance: 250 }, { quality: 0.5, distance: 350 }, { quality: 0.2, distance: 450 }, { quality: 0.1, distance: 600 }], true, BABYLON.SimplificationType.QUADRATIC, null);
+        
     };
 };

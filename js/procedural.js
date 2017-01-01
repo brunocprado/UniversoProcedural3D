@@ -64,7 +64,7 @@ var atualizaTextura = function (random) {
 }
 
 function skybox(){
-    var skybox = BABYLON.Mesh.CreateBox("skyBox", 20000, scene);
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 4000, scene);
     var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
     skyboxMaterial.backFaceCulling = false;
     var files = [
@@ -81,5 +81,6 @@ function skybox(){
     skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
     skyboxMaterial.disableLighting = true;
     skybox.material = skyboxMaterial;
+    skybox.infiniteDistance = true;
 }
 

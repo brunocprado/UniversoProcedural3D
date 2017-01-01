@@ -13,14 +13,10 @@ carregaTexturas();
 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 180,-800), scene);
 camera.setTarget(new BABYLON.Vector3(300, 0,0));
 camera.attachControl(canvas, true);
-camera.lowerRadiusLimit = 50;
-camera.upperRadiusLimit = 600;
-camera.maxZ = 22000;
+////camera.lowerRadiusLimit = 50;
+////camera.upperRadiusLimit = 600;
+//camera.maxZ = 0;
 camera.speed = 10;
-
-//scene.collisionsEnabled = true;
-//camera.checkCollisions = true;
-//camera.ellipsoid = new BABYLON.Vector3(2, 2, 2);
 
 var luzGlobal = new BABYLON.HemisphericLight("LuzGlobal", new BABYLON.Vector3(0, 0, 0), scene);
 luzGlobal.diffuse = new BABYLON.Color3(1, 1, 1);
@@ -33,9 +29,10 @@ var materialOrbita = new BABYLON.StandardMaterial("orbita", scene);
 
 //=====| CENA |=====//
 
-var sol = BABYLON.Mesh.CreateSphere('sol', 40, 139.2, scene);
-sol.material = texturas["sol"];
-sol.checkCollisions = true;
+var SOL = new Estrela("sol");
+SOL.renderiza(); SOL.renderiza();
+
+var sol = SOL.globo;
 
 var luzSolar = new BABYLON.VolumetricLightScatteringPostProcess('godrays', 1.0, camera, sol, 100, BABYLON.Texture.BILINEAR_SAMPLINGMODE, engine, false);
 
@@ -96,14 +93,13 @@ var click = function(evt){
         scene.debugLayer.show(); evt.preventDefault();  return; 
     } //engine.switchFullscreen(true);
     var pick = scene.pick(scene.pointerX, scene.pointerY, function (mesh){ return mesh; });
-    if(pick.pickedMesh.info != null){
-        console.log(pick.pickedMesh.info);
-         console.log(pick.pickedMesh.position);
-//        alert("clicou no planeta");
-    }
+//    if(pick.pickedMesh.info != null){
+//        console.log(pick.pickedMesh.info);
+//         console.log(pick.pickedMesh.position);
+////        alert("clicou no planeta");
+//    }
 }
 canvas.addEventListener("pointerdown", click, false);
-
 
 BABYLON.Engine.ShadersRepository = "shaders/";
 
@@ -111,9 +107,6 @@ function carregaTexturas(){
     texturas["sol"] = new BABYLON.StandardMaterial("sol", scene);
     texturas["sol"].diffuseTexture = new BABYLON.Texture("texturas/sol.jpg", scene);
 //    texturas["sol"].reflectionTexture = new BABYLON.Texture("texturas/terra.png", scene);
-    
-//    texturas["terra"] = new BABYLON.StandardMaterial("terra", scene);
-//    texturas["terra"].diffuseTexture = new BABYLON.Texture("texturas/teste.png", scene);   
 }
 
 skybox();
